@@ -8,13 +8,11 @@ class TestCheckWinX:
                  ["-", "-", "O"]]
         assert TicTacToe.check_win(board) == "X"
 
-
     def test_check_win_horizontal_middle(self) -> None:
         board = [["O", "O", "X"],
                  ["X", "X", "X"],
                  ["O", "-", "O"]]
         assert TicTacToe.check_win(board) == "X"
-
 
     def test_check_win_horizontal_bottom(self) -> None:
         board = [["X", "O", "X"],
@@ -22,13 +20,11 @@ class TestCheckWinX:
                  ["X", "X", "X"]]
         assert TicTacToe.check_win(board) == "X"
 
-
     def test_check_win_vertical_first(self) -> None:
         board = [["X", "O", "X"],
                  ["X", "-", "O"],
                  ["X", "O", "O"]]
         assert TicTacToe.check_win(board) == "X"
-
 
     def test_check_win_vertical_second(self) -> None:
         board = [["O", "X", "-"],
@@ -36,20 +32,17 @@ class TestCheckWinX:
                  ["X", "X", "O"]]
         assert TicTacToe.check_win(board) == "X"
 
-
     def test_check_win_vertical_third(self) -> None:
         board = [["X", "O", "X"],
                  ["O", "O", "X"],
                  ["O", "X", "X"]]
         assert TicTacToe.check_win(board) == "X"
-
     
     def test_check_win_diagonal_first(self) -> None:
         board = [["X", "O", "X"],
                  ["O", "X", "O"],
                  ["O", "O", "X"]]
         assert TicTacToe.check_win(board) == "X"
-
 
     def test_check_win_diagonal_second(self) -> None:
         board = [["X", "O", "X"],
@@ -66,13 +59,11 @@ class TestCheckWinO:
                  ["-", "-", "X"]]
         assert TicTacToe.check_win(board) == "O"
 
-
     def test_check_win_horizontal_middle(self) -> None:
         board = [["X", "X", "O"],
                  ["O", "O", "O"],
                  ["X", "-", "X"]]
         assert TicTacToe.check_win(board) == "O"
-
 
     def test_check_win_horizontal_bottom(self) -> None:
         board = [["O", "X", "O"],
@@ -80,13 +71,11 @@ class TestCheckWinO:
                  ["O", "O", "O"]]
         assert TicTacToe.check_win(board) == "O"
 
-
     def test_check_win_vertical_first(self) -> None:
         board = [["O", "X", "O"],
                  ["O", "-", "X"],
                  ["O", "X", "X"]]
         assert TicTacToe.check_win(board) == "O"
-
 
     def test_check_win_vertical_second(self) -> None:
         board = [["X", "O", "-"],
@@ -94,13 +83,11 @@ class TestCheckWinO:
                  ["O", "O", "X"]]
         assert TicTacToe.check_win(board) == "O"
 
-
     def test_check_win_vertical_third(self) -> None:
         board = [["O", "X", "O"],
                  ["X", "X", "O"],
                  ["X", "O", "O"]]
         assert TicTacToe.check_win(board) == "O"
-
 
     def test_check_win_diagonal_first(self) -> None:
         board = [["O", "X", "O"],
@@ -108,14 +95,13 @@ class TestCheckWinO:
                  ["X", "X", "O"]]
         assert TicTacToe.check_win(board) == "O"
 
-
     def test_check_win_diagonal_second(self) -> None:
         board = [["O", "X", "O"],
                  ["-", "O", "X"],
                  ["O", "X", "-"]]
         assert TicTacToe.check_win(board) == "O"
-
     
+
 class TestPrintBoard:
     def test_print_board_empty(self) -> None:
         board: list[str] = ["-", "-", "-",
