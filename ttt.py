@@ -69,7 +69,7 @@ class TicTacToe():
 
         # Let human choose his symbol
         while True:
-            symbol = self.input_player_symbol()
+            symbol = self.get_input_player_symbol()
             if symbol in self.players.values():
                 if symbol == "X":
                     self.players[TicTacToe.PLAYER] = "X"
@@ -116,7 +116,7 @@ class TicTacToe():
         print("\nTIC TAC TOE\n")
 
     @staticmethod
-    def input_player_symbol() -> str:
+    def get_input_player_symbol() -> str:
         human_symbol: str = input("Choose your Symbol (X/O): ").upper().strip()
         return human_symbol
         
