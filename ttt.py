@@ -8,7 +8,7 @@ class TicTacToe():
                                          [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
                                          [0, 4, 8], [2, 4, 6]] # Diagonals
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.board: list[str] =  ["-", "-", "-",
                                   "-", "-", "-",
                                   "-", "-", "-"]
@@ -20,6 +20,7 @@ class TicTacToe():
             pos = random.randint(0, 8)
             if self.check_pos_empty(pos): return pos
 
+    # Check if a Position is empty for placing validation
     def check_pos_empty(self, pos: int) -> bool:
         if not self.board[pos] == "-": return False
         return True
@@ -44,16 +45,29 @@ class TicTacToe():
         # Continue Game
         return None
 
+    def start(self) -> None:
+        self.menu()
+
+        while True:
+            symbol = self.input_player_symbol()
+            if symbol in ["X", "O"]:
+                self.is_player_X = True if symbol == "X" else False
+                print(TicTacToe.LINE)
+                break
+            else:
+                print(TicTacToe.INVALID_INPUT)
+    
+        self.play()
+
     # Game Loop
     def play(self) -> None:
         while True:
-            board = self.board
             # Checks if Player input is valid & if the position is empty
             while True:
                 try:
-                    print(self.print_board(board))
+                    print(self.print_board(self.board))
                     human_pos: int = int(self.get_human_pos())
-                    if human_pos > 0 and human_pos < 9:
+                    if human_pos > 0 and human_pos <= 9:
                         human_pos -= 1
                         if self.check_pos_empty(human_pos):
                             break
@@ -69,13 +83,13 @@ class TicTacToe():
             # Update Board
             self.board[human_pos] = "X" if self.is_player_X else "O"
             self.board[computer_pos] = "O" if self.is_player_X else "X"
-    
+            print(TicTacToe.LINE)
+
             # Check if there is a winner
-            winner = self.check_win(board)
+            winner = self.check_win(self.board)
             if winner:
-                print(TicTacToe.LINE)
                 print("\n GAME OVER")
-                print(self.print_board(board))
+                print(self.print_board(self.board))
 
                 match winner:
                     case "X":
@@ -87,25 +101,11 @@ class TicTacToe():
 
                 print(TicTacToe.LINE)
                 break
-            print(TicTacToe.LINE)
-    
-    def start(self) -> None:
-        self.menu()
 
-        while (True):
-            symbol = self.input_player_symbol()
-            if symbol in "XO":
-                self.is_player_X = True if symbol == "X" else False
-                print(TicTacToe.LINE)
-                break
-            else:
-                print(TicTacToe.INVALID_INPUT)
-    
-        self.play()
 
     # =================== UI ===================
     @staticmethod
-    def menu():
+    def menu() -> None:
         print(TicTacToe.LINE)
         print("\nTIC TAC TOE\n")
 
