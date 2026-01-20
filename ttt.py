@@ -2,8 +2,10 @@ import random
 
 class TicTacToe():
 
-    LINE = "\n" + "-" * 30
-    INVALID_INPUT = "\nInvalid Input. Please try again."
+    PLAYER: str = "player"
+    COMPUTER: str = "computer"
+    LINE: str = "\n" + "-" * 30
+    INVALID_INPUT: str = "\nInvalid Input. Please try again."
     WIN_COMBINATIONS: list[list[int]] = [[0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows 
                                          [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
                                          [0, 4, 8], [2, 4, 6]] # Diagonals
@@ -12,7 +14,7 @@ class TicTacToe():
         self.board: list[str] =  ["-", "-", "-",
                                   "-", "-", "-",
                                   "-", "-", "-"]
-        self.is_player_X: bool = True
+        self.players: dict[str, str] = {TicTacToe.PLAYER: "X", TicTacToe.COMPUTER: "O"}
         self.player_turn: bool = True
 
     # =================== LOGIC ===================
@@ -68,12 +70,14 @@ class TicTacToe():
         # Let human choose his symbol
         while True:
             symbol = self.input_player_symbol()
-            if symbol in ["X", "O"]:
+            if symbol in self.players.values():
                 if symbol == "X":
-                    self.is_player_X = True
+                    self.players[TicTacToe.PLAYER] = "X"
+                    self.players[TicTacToe.COMPUTER] = "O"
                     self.player_turn = True
                 else:
-                    self.is_player_X = False
+                    self.players[TicTacToe.PLAYER] = "O"
+                    self.players[TicTacToe.COMPUTER] = "X"
                     self.player_turn = False
                 break
             else:
@@ -87,13 +91,14 @@ class TicTacToe():
             
             # Print board
             if self.player_turn: print(TicTacToe.LINE) 
-            if self.player_turn: print(self.get_board(self.board)) 
+            if self.player_turn: print(self.get_board(self.board))
 
             # Get board position
             placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_computer_pos()
 
             # Set board position
-            self.board[placed_pos] = "X" if self.player_turn else "O"
+            symbol = self.players[TicTacToe.PLAYER if self.player_turn else TicTacToe.COMPUTER]
+            self.board[placed_pos] = symbol
 
             # Check if there is a winner
             if self.check_win(self.board): break
@@ -136,9 +141,9 @@ class TicTacToe():
 
         match winner:
             case "X":
-                print("Player has won!" if self.is_player_X else "Computer has won!")
+                print("Player has won!" if self.players[TicTacToe.PLAYER] == "X" else "Computer has won!")
             case "O":
-                print("Computer has won!" if self.is_player_X else "Player has won!")
+                print("Computer has won!" if self.players[TicTacToe.COMPUTER] == "O" else "Player has won!")
             case "DRAW":
                 print("Player and Computer tied!")
 
