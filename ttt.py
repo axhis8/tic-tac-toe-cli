@@ -13,6 +13,7 @@ class TicTacToe():
                                   "-", "-", "-",
                                   "-", "-", "-"]
         self.is_player_X: bool = True
+        self.player_turn: bool = True
 
     # =================== LOGIC ===================
     def get_computer_pos(self) -> int:
@@ -24,14 +25,13 @@ class TicTacToe():
     def get_valid_human_pos(self) -> int:
         while True:
             try:
-                print(self.get_board(self.board))
                 human_pos: int = int(self.get_input_human_pos())
                 if human_pos > 0 and human_pos < 10:
                     human_pos -= 1
                     if self.check_pos_empty(human_pos):
                         return human_pos
                     else:
-                        print("That Position is already occupied.")
+                        print("That Position is already occupied.\n")
                 else:
                     print(TicTacToe.INVALID_INPUT)
             except ValueError:
@@ -65,11 +65,16 @@ class TicTacToe():
     def start(self) -> None:
         self.print_menu()
 
+        # Let human choose his symbol
         while True:
             symbol = self.input_player_symbol()
             if symbol in ["X", "O"]:
-                self.is_player_X = True if symbol == "X" else False
-                print(TicTacToe.LINE)
+                if symbol == "X":
+                    self.is_player_X = True
+                    self.player_turn = True
+                else:
+                    self.is_player_X = False
+                    self.player_turn = False
                 break
             else:
                 print(TicTacToe.INVALID_INPUT)
@@ -80,23 +85,24 @@ class TicTacToe():
     def play(self) -> None:
         while True:
             
-            # Get Human board position
-            human_pos: int = self.get_valid_human_pos()
+            # Print board
+            if self.player_turn: print(TicTacToe.LINE) 
+            if self.player_turn: print(self.get_board(self.board)) 
 
-            # Get Computer board position
-            computer_pos: int = self.get_computer_pos()
+            # Get board position
+            placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_computer_pos()
 
-            # Update Board
-            self.board[human_pos] = "X" if self.is_player_X else "O"
-            self.board[computer_pos] = "O" if self.is_player_X else "X"
-            print(TicTacToe.LINE)
+            # Set board position
+            self.board[placed_pos] = "X" if self.player_turn else "O"
 
             # Check if there is a winner
-            winner = self.check_win(self.board)
-            if winner:
-                self.print_end_game_menu(winner)
-                break
+            if self.check_win(self.board): break
 
+            # Change turn (boolean flip)
+            self.player_turn = not self.player_turn
+
+        winner = self.check_win(self.board)
+        self.print_end_game_menu(winner)
 
     # =================== UI ===================
     @staticmethod
@@ -106,7 +112,7 @@ class TicTacToe():
 
     @staticmethod
     def input_player_symbol() -> str:
-        human_symbol: str = input("Do you want to be X or O? (X/O): ").upper().strip()
+        human_symbol: str = input("Choose your Symbol (X/O): ").upper().strip()
         return human_symbol
         
     @staticmethod
@@ -121,9 +127,10 @@ class TicTacToe():
     
     @staticmethod 
     def get_input_human_pos() -> str:
-        return input("Set your Symbol (1-9): ")
+        return input("Place your Symbol (1-9): ")
 
     def print_end_game_menu(self, winner) -> None:
+        print(TicTacToe.LINE)
         print("\n GAME OVER")
         print(self.get_board(self.board))
 
