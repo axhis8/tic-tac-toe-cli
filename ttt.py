@@ -26,14 +26,32 @@ class TicTacToe():
 
     @staticmethod
     def check_win(board: list) -> str | None:
+
+        # Check if any win combinations are met
+        for win_combination in TicTacToe.WIN_COMBINATIONS:
+                # Check if X won
+                if all(board[i] == "X" for i in win_combination):
+                    return "X"
+        
+                # Check if O won
+                elif all(board[i] == "O" for i in win_combination):
+                    return "O"
+        
+        # Check Draw
+        if not "-" in board:
+            return "DRAW"
+
+        # Continue Game
         return None
 
+    # Game Loop
     def play(self) -> None:
         while True:
+            board = self.board
             # Checks if Player input is valid & if the position is empty
             while True:
                 try:
-                    print(self.print_board(self.board))
+                    print(self.print_board(board))
                     human_pos: int = int(self.get_human_pos())
                     if human_pos > 0 and human_pos < 9:
                         human_pos -= 1
@@ -52,22 +70,24 @@ class TicTacToe():
             self.board[human_pos] = "X" if self.is_player_X else "O"
             self.board[computer_pos] = "O" if self.is_player_X else "X"
     
-            # Check if there are any win combinations
-            if self.check_win(self.board) == "X":
+            # Check if there is a winner
+            winner = self.check_win(board)
+            if winner:
                 print(TicTacToe.LINE)
-                print("\nPlayer has won!" if self.is_player_X else "Computer has won!")
+                print("\n GAME OVER")
+                print(self.print_board(board))
+
+                match winner:
+                    case "X":
+                        print("Player has won!" if self.is_player_X else "Computer has won!")
+                    case "O":
+                        print("Computer has won!" if self.is_player_X else "Player has won!")
+                    case "DRAW":
+                        print("Player and Computer tied!")
+
                 print(TicTacToe.LINE)
                 break
-            elif self.check_win(self.board) == "O":
-                print(TicTacToe.LINE)
-                print("\nComputer has won!" if self.is_player_X else "Player has won!")
-                print(TicTacToe.LINE)
-                break
-            elif self.check_win(self.board) == None:
-                print(TicTacToe.LINE)
-                print("\nPlayer and Computer tied!")
-                print(TicTacToe.LINE)
-                break
+            print(TicTacToe.LINE)
     
     def start(self) -> None:
         self.menu()
