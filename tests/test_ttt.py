@@ -1,4 +1,4 @@
-from src.ttt import TicTacToe
+from src.tictactoe import TicTacToe
 from src.constants import Ending
 
 class TestCheckWinX:

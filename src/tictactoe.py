@@ -28,7 +28,11 @@ class TicTacToe():
                 empty_board_index.append(index)
         return empty_board_index
     
-    # We evaluate what is the best move for the AI, as the AI can't "see" the best move, but it can judge with numbers. So the highest points shows AI the best move, while the lowest the worst. It is, so the AI can actually see & judge.
+    """
+    We evaluate what is the best move for the AI, as the AI can't "see" the best move,
+    but it can judge with numbers. So the highest points shows AI the best move, while the lowest the worst. 
+    It is, so the AI can actually see & judge.
+    """
     @staticmethod
     def evaluate(board: list, ai_symbol: str, human_symbol: str) -> int | None:
         winner: Ending = TicTacToe.check_win(board)
@@ -46,7 +50,12 @@ class TicTacToe():
     @staticmethod
     def minimax(board: list, ai_symbol: str, human_symbol: str, is_maximizing: bool) -> int:
         winner: Ending = TicTacToe.check_win(board)
-        # If the game is over, return - and when this method calls itself, it shows that the best score is given through the move-simulation, and the AI can stop & continue best possible move (which would only return Ending.DRAW or it's symbol, but never one which the AI would loose with)
+        """
+        If the game is over, return - and when this method calls itself, 
+        it shows that the best score is given through the move-simulation, 
+        and the AI can stop & continue best possible move 
+        (which would only return Ending.DRAW or it's symbol, but never one which the AI would loose with)
+        """
         if winner is not None: 
             return TicTacToe.evaluate(board, ai_symbol, human_symbol)
         
@@ -67,7 +76,13 @@ class TicTacToe():
                 best_score = min(score, best_score)
         
         return best_score
-    # So each move simulation gets a point (-10 - which means it would make us loose, 0 - which returns a draw and 10 which would make the AI win) and the AI get's the moves with 10 or if not possible, 0. But never -10. (because it already simulated all possible moves and outcomes & TicTacToe is a simple game where even with the best moves, you may get max a draw)
+    """
+    So each move simulation gets a point (-10 - which means it would make us loose, 0 - 
+    which returns a draw and 10 which would make the AI win) and 
+    the AI get's the moves with 10 or if not possible, 0. But never -10. 
+    (because it already simulated all possible moves and outcomes 
+    & TicTacToe is a simple game where even with the best moves, you may get max a draw)
+    """
     
     def get_advanced_computer_pos(self) -> int:
         best_score: float = -float('inf') # boilerplate, as explained in the minimax() method
@@ -78,7 +93,11 @@ class TicTacToe():
             score = TicTacToe.minimax(self.board, self.players[TicTacToe.COMPUTER], self.players[TicTacToe.PLAYER], is_maximizing=False) # 2. Call the minimax() method to get the highest score if we make this move, we give is_maximizing=False, because the next move would be the human
             self.board[field_index] = "-" # Delete last move, so it won't appear on the real one, as this is an simulation
 
-            # Compares the score from the minimax() method, if it was better than the last move so we know the best possible move, as it also saves the index of the move
+            """
+            Compares the score from the minimax() method, 
+            if it was better than the last move so we know the best possible move, 
+            as it also saves the index of the move
+            """
             if score > best_score: 
                 best_move_index = field_index
                 best_score = score
