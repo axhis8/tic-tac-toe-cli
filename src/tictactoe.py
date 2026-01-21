@@ -22,17 +22,17 @@ class TicTacToe():
     It is, so the AI can actually see & judge.
     """
     @staticmethod
-    def evaluate(board: list, ai_symbol: str, human_symbol: str) -> int | None:
+    def evaluate(board: list, ai_symbol: str, human_symbol: str) -> int:
         winner: Ending = TicTacToe.check_win(board)
 
         if winner.value == ai_symbol:
             return 10
         elif winner == Ending.DRAW:
-            return 0
+            return 0 # Neutral
         elif winner.value == human_symbol:
             return -10
         else:
-            return None
+            return 0
     
     # It is a static method, so it doesn't call for every instance, which would result lag
     @staticmethod
@@ -75,11 +75,19 @@ class TicTacToe():
     def get_advanced_computer_pos(self) -> int:
         best_score: float = -float('inf') # boilerplate, as explained in the minimax() method
         best_move_index: int = -1 # boilerplate: -1 as it's not a valid move/field
+
+        if 4 in TicTacToe.get_empty_pos(self.board): return 4 # Always get the middle, if empty
+
         for field_index in TicTacToe.get_empty_pos(self.board):
 
             self.board[field_index] = self.players[Player.COMPUTER] # 1. Simulate a move in the empty field
-            score = TicTacToe.minimax(self.board, self.players[Player.COMPUTER], self.players[Player.HUMAN], is_maximizing=False) # 2. Call the minimax() method to get the highest score if we make this move, we give is_maximizing=False, because the next move would be the human
-            self.board[field_index] = "-" # Delete last move, so it won't appear on the real one, as this is an simulation
+
+            score = TicTacToe.minimax(self.board, 
+                                      self.players[Player.COMPUTER], 
+                                      self.players[Player.HUMAN], 
+                                      is_maximizing=False) # 2. Call the minimax() method to get the highest score if we make this move, we give is_maximizing=False, because the next move would be the human
+            
+            self.board[field_index] = "-" # 3. Delete last move, so it won't appear on the real one, as this is an simulation
 
             """
             Compares the score from the minimax() method, 
