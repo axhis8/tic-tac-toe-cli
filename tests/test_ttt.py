@@ -1,4 +1,5 @@
-from ttt import TicTacToe
+from src.ttt import TicTacToe
+from src.constants import Ending
 
 class TestCheckWinX:
 
@@ -6,49 +7,49 @@ class TestCheckWinX:
         board = ["X", "X", "X",
                  "-", "-", "O",
                  "-", "-", "O"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_horizontal_middle(self) -> None:
         board = ["O", "O", "X",
                  "X", "X", "X",
                  "O", "-", "O"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_horizontal_bottom(self) -> None:
         board = ["X", "O", "X",
                  "O", "-", "O",
                  "X", "X", "X"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_vertical_first(self) -> None:
         board = ["X", "O", "X",
                  "X", "-", "O",
                  "X", "O", "O"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_vertical_second(self) -> None:
         board = ["O", "X", "-",
                  "O", "X", "O",
                  "X", "X", "O"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_vertical_third(self) -> None:
         board = ["X", "O", "X",
                  "O", "O", "X",
                  "O", "X", "X"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
     
     def test_check_win_diagonal_first(self) -> None:
         board = ["X", "O", "X",
                  "O", "X", "O",
                  "O", "O", "X"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
     def test_check_win_diagonal_second(self) -> None:
         board = ["X", "O", "X",
                  "-", "X", "O",
                  "X", "O", "-"]
-        assert TicTacToe.check_win(board) == "X"
+        assert TicTacToe.check_win(board) == Ending.X_WON
 
 
 class TestCheckWinO:
@@ -57,49 +58,49 @@ class TestCheckWinO:
         board = ["O", "O", "O",
                  "-", "-", "X",
                  "-", "-", "X"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_horizontal_middle(self) -> None:
         board = ["X", "X", "O",
                  "O", "O", "O",
                  "X", "-", "X"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_horizontal_bottom(self) -> None:
         board = ["O", "X", "O",
                  "X", "-", "X",
                  "O", "O", "O"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_vertical_first(self) -> None:
         board = ["O", "X", "O",
                  "O", "-", "X",
                  "O", "X", "X"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_vertical_second(self) -> None:
         board = ["X", "O", "-",
                  "X", "O", "X",
                  "O", "O", "X"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_vertical_third(self) -> None:
         board = ["O", "X", "O",
                  "X", "X", "O",
                  "X", "O", "O"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_diagonal_first(self) -> None:
         board = ["O", "X", "O",
                  "X", "O", "X",
                  "X", "X", "O"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
 
     def test_check_win_diagonal_second(self) -> None:
         board = ["O", "X", "O",
                  "-", "O", "X",
                  "O", "X", "-"]
-        assert TicTacToe.check_win(board) == "O"
+        assert TicTacToe.check_win(board) == Ending.O_WON
     
 
 class TestGetBoard:

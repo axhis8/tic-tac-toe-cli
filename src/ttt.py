@@ -1,4 +1,4 @@
-from constants import Difficulty, Ending
+from src.constants import Difficulty, Ending
 import random
 
 class TicTacToe():
@@ -31,13 +31,13 @@ class TicTacToe():
     # We evaluate what is the best move for the AI, as the AI can't "see" the best move, but it can judge with numbers. So the highest points shows AI the best move, while the lowest the worst. It is, so the AI can actually see & judge.
     @staticmethod
     def evaluate(board: list, ai_symbol: str, human_symbol: str) -> int | None:
-        winner: str = TicTacToe.check_win(board)
+        winner: Ending = TicTacToe.check_win(board)
 
-        if winner == ai_symbol:
+        if winner.value == ai_symbol:
             return 10
         elif winner == Ending.DRAW:
             return 0
-        elif winner == human_symbol:
+        elif winner.value == human_symbol:
             return -10
         else:
             return None
@@ -45,7 +45,7 @@ class TicTacToe():
     # It is a static method, so it doesn't call for every instance, which would result lag
     @staticmethod
     def minimax(board: list, ai_symbol: str, human_symbol: str, is_maximizing: bool) -> int:
-        winner: str = TicTacToe.check_win(board)
+        winner: Ending = TicTacToe.check_win(board)
         # If the game is over, return - and when this method calls itself, it shows that the best score is given through the move-simulation, and the AI can stop & continue best possible move (which would only return Ending.DRAW or it's symbol, but never one which the AI would loose with)
         if winner is not None: 
             return TicTacToe.evaluate(board, ai_symbol, human_symbol)
@@ -129,7 +129,7 @@ class TicTacToe():
         return True
 
     @staticmethod
-    def check_win(board: list) -> str | None:
+    def check_win(board: list) -> Ending | None:
 
         # Check if any win combinations are met
         for win_combination in TicTacToe.WIN_COMBINATIONS:
