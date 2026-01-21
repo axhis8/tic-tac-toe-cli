@@ -22,11 +22,7 @@ class TicTacToe():
     # =================== MINIMAX AI ===================    
     @staticmethod
     def get_empty_pos(board: list) -> list:
-        empty_board_index: list[int] = []
-        for index, pos in enumerate(board):
-            if pos == "-":
-                empty_board_index.append(index)
-        return empty_board_index
+        return [index for index, pos in enumerate(board) if pos == "-"]
     
     """
     We evaluate what is the best move for the AI, as the AI can't "see" the best move,
@@ -204,8 +200,9 @@ class TicTacToe():
         while True:
             
             # Print board
-            if self.player_turn: print(TicTacToe.LINE) 
-            if self.player_turn: print(TicTacToe.get_board(self.board))
+            if self.player_turn: 
+                print(TicTacToe.LINE) 
+                print(TicTacToe.get_board(self.board))
 
             # Get board position
             placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_difficulty_computer(self.difficulty)
