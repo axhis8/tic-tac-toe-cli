@@ -83,7 +83,14 @@ class TicTacToe():
 
         return best_move_index
         
-    # =================== LOGIC ===================    
+    # =================== LOGIC =================== 
+    def get_middle_computer_pos(self) -> int:
+        rand_difficulty: int = random.randint(0, 1)
+        if rand_difficulty:
+            return self.get_advanced_computer_pos()
+        elif not rand_difficulty:
+            return self.get_easy_computer_pos()
+
     def get_easy_computer_pos(self) -> int:
         while True:
             pos: int = random.randint(0, 8)
