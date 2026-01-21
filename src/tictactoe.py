@@ -223,6 +223,17 @@ class TicTacToe():
         winner = TicTacToe.check_win(self.board)
         self.print_end_game_menu(winner)
 
+        # Restart
+        choice: str = input("\nDo you wish to play again? (y/n): ")
+        if choice == "y" or choice == "yes":
+            self.reset()
+            self.start()
+        
+    def reset(self) -> None:
+        self.board: list[str] =  ["-", "-", "-",
+                                  "-", "-", "-",
+                                  "-", "-", "-"]
+
     # =================== UI ===================
     @staticmethod
     def print_menu() -> None:
