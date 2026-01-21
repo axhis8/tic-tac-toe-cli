@@ -17,12 +17,78 @@ class TicTacToe():
         self.players: dict[str, str] = {TicTacToe.PLAYER: "X", TicTacToe.COMPUTER: "O"}
         self.player_turn: bool = True
 
-    # =================== LOGIC ===================
-    def get_computer_pos(self) -> int:
-        while True:
-            pos = random.randint(0, 8)
-            if self.check_pos_empty(pos): return pos
+    # =================== MINIMAX AI ===================    
+    @staticmethod
+    def get_empty_pos(board: list) -> list:
+        empty_board_index: list[int] = []
+        for index, pos in enumerate(board):
+            if pos == "-":
+                empty_board_index.append(index)
+        return empty_board_index
     
+    # We evaluate what is the best move for the AI, as the AI can't "see" the best move, but it can judge with numbers. So the highest points shows AI the best move, while the lowest the worst. It is, so the AI can actually see & judge.
+    @staticmethod
+    def evaluate(board: list, ai_symbol: str, human_symbol: str) -> int | None:
+        winner: str = TicTacToe.check_win(board)
+
+        if winner == ai_symbol:
+            return 10
+        elif winner == "DRAW":
+            return 0
+        elif winner == human_symbol:
+            return -10
+        else:
+            return None
+    
+    # It is a static method, so it doesn't call for every instance, which would result lag
+    @staticmethod
+    def minimax(board: list, ai_symbol: str, human_symbol: str, is_maximizing: bool) -> int:
+        winner: str = TicTacToe.check_win(board)
+        # If the game is over, return - and when this method calls itself, it shows that the best score is given through the move-simulation, and the AI can stop & continue best possible move (which would only return "DRAW" or it's symbol, but never one which the AI would loose with)
+        if winner is not None: 
+            return TicTacToe.evaluate(board, ai_symbol, human_symbol)
+        
+        if is_maximizing:
+            best_score: float = -float('inf') # Set the score to low as possible - a boilerplate to start on for the for loop, so anything higher than this might be the better result (with max() tho, we get the best possible result, with comparing each move and the moves before)
+            for move in TicTacToe.get_empty_pos(board): # Get all empty Positions in board
+                board[move] = ai_symbol # Simulate Position
+                score: int = TicTacToe.minimax(board, ai_symbol, human_symbol, False) # Switch turn, so the AI simulates humans, who would try to get the worst possible outcome for the AI
+                board[move] = "-" # Reset Position, so it wouldn't show on the real board and to simulate for next possible moves
+                best_score = max(score, best_score) # Get best Position, compared to the simulation of the last move
+        
+        else:
+            best_score: float = float('inf')
+            for move in TicTacToe.get_empty_pos(board):
+                board[move] = human_symbol
+                score: int = TicTacToe.minimax(board, ai_symbol, human_symbol, True) 
+                board[move] = "-"
+                best_score = min(score, best_score)
+        
+        return best_score
+    # So each move simulation gets a point (-10 - which means it would make us loose, 0 - which returns a draw and 10 which would make the AI win) and the AI get's the moves with 10 or if not possible, 0. But never -10. (because it already simulated all possible moves and outcomes & TicTacToe is a simple game where even with the best moves, you may get max a draw)
+    
+    def get_advanced_computer_pos(self) -> int:
+        best_score: float = -float('inf') # boilerplate, as explained in the minimax() method
+        best_move_index: int = -1 # boilerplate: -1 as it's not a valid move/field
+        for field_index in TicTacToe.get_empty_pos(self.board):
+
+            self.board[field_index] = self.players[TicTacToe.COMPUTER] # 1. Simulate a move in the empty field
+            score = TicTacToe.minimax(self.board, self.players[TicTacToe.COMPUTER], self.players[TicTacToe.PLAYER], is_maximizing=False) # 2. Call the minimax() method to get the highest score if we make this move, we give is_maximizing=False, because the next move would be the human
+            self.board[field_index] = "-" # Delete last move, so it won't appear on the real one, as this is an simulation
+
+            # Compares the score from the minimax() method, if it was better than the last move so we know the best possible move, as it also saves the index of the move
+            if score > best_score: 
+                best_move_index = field_index
+                best_score = score
+
+        return best_move_index
+        
+    # =================== LOGIC ===================    
+    def get_easy_computer_pos(self) -> int:
+        while True:
+            pos: int = random.randint(0, 8)
+            if self.check_pos_empty(pos): return pos
+
     # Checks if Player input is valid & if the position is empty
     def get_valid_human_pos(self) -> int:
         while True:
@@ -94,7 +160,7 @@ class TicTacToe():
             if self.player_turn: print(self.get_board(self.board))
 
             # Get board position
-            placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_computer_pos()
+            placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_advanced_computer_pos()
 
             # Set board position
             symbol = self.players[TicTacToe.PLAYER if self.player_turn else TicTacToe.COMPUTER]
