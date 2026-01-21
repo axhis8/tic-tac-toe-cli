@@ -1,18 +1,15 @@
+from constants import Difficulty, Ending
 import random
 
 class TicTacToe():
 
     PLAYER: str = "player"
     COMPUTER: str = "computer"
-    EASY: int = 1
-    MIDDLE: int = 2
-    IMPOSSIBLE: int = 3
     LINE: str = "\n" + "-" * 30
     INVALID_INPUT: str = "\nInvalid Input. Please try again."
     WIN_COMBINATIONS: list[list[int]] = [[0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows 
                                          [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
                                          [0, 4, 8], [2, 4, 6]] # Diagonals
-    DIFFICULTIES: tuple = (EASY, MIDDLE, IMPOSSIBLE)
 
     def __init__(self) -> None:
         self.board: list[str] =  ["-", "-", "-",
@@ -20,7 +17,7 @@ class TicTacToe():
                                   "-", "-", "-"]
         self.players: dict[str, str] = {TicTacToe.PLAYER: "X", TicTacToe.COMPUTER: "O"}
         self.player_turn: bool = True
-        self.difficulty: int = TicTacToe.EASY
+        self.difficulty: Difficulty = Difficulty.EASY
 
     # =================== MINIMAX AI ===================    
     @staticmethod
@@ -38,7 +35,7 @@ class TicTacToe():
 
         if winner == ai_symbol:
             return 10
-        elif winner == "DRAW":
+        elif winner == Ending.DRAW:
             return 0
         elif winner == human_symbol:
             return -10
@@ -49,7 +46,7 @@ class TicTacToe():
     @staticmethod
     def minimax(board: list, ai_symbol: str, human_symbol: str, is_maximizing: bool) -> int:
         winner: str = TicTacToe.check_win(board)
-        # If the game is over, return - and when this method calls itself, it shows that the best score is given through the move-simulation, and the AI can stop & continue best possible move (which would only return "DRAW" or it's symbol, but never one which the AI would loose with)
+        # If the game is over, return - and when this method calls itself, it shows that the best score is given through the move-simulation, and the AI can stop & continue best possible move (which would only return Ending.DRAW or it's symbol, but never one which the AI would loose with)
         if winner is not None: 
             return TicTacToe.evaluate(board, ai_symbol, human_symbol)
         
@@ -103,11 +100,11 @@ class TicTacToe():
     
     def get_difficulty_computer(self, difficulty: int) -> int:
         match difficulty:
-            case TicTacToe.EASY:
+            case Difficulty.EASY:
                 return self.get_easy_computer_pos()
-            case TicTacToe.MIDDLE:
+            case Difficulty.MIDDLE:
                 return self.get_middle_computer_pos()
-            case TicTacToe.IMPOSSIBLE:
+            case Difficulty.IMPOSSIBLE:
                 return self.get_advanced_computer_pos()
 
     # Checks if Player input is valid & if the position is empty
@@ -138,15 +135,15 @@ class TicTacToe():
         for win_combination in TicTacToe.WIN_COMBINATIONS:
                 # Check if X won
                 if all(board[i] == "X" for i in win_combination):
-                    return "X"
+                    return Ending.X_WON
         
                 # Check if O won
                 elif all(board[i] == "O" for i in win_combination):
-                    return "O"
+                    return Ending.O_WON
         
         # Check Draw
         if not "-" in board:
-            return "DRAW"
+            return Ending.DRAW
 
         # Continue Game
         return None
@@ -173,8 +170,8 @@ class TicTacToe():
         while True:
             try:
                 difficulty: int = int(TicTacToe.get_input_player_difficulty())
-                if difficulty in TicTacToe.DIFFICULTIES:
-                    self.difficulty = difficulty
+                if difficulty in (d.value for d in Difficulty):
+                    self.difficulty = Difficulty(difficulty)
                     break
                 else:
                     print(TicTacToe.INVALID_INPUT)
@@ -248,11 +245,11 @@ class TicTacToe():
         print(TicTacToe.get_board(self.board))
 
         match winner:
-            case "X":
+            case Ending.X_WON:
                 print("Player has won!" if self.players[TicTacToe.PLAYER] == "X" else "Computer has won!")
-            case "O":
+            case Ending.O_WON:
                 print("Computer has won!" if self.players[TicTacToe.COMPUTER] == "O" else "Player has won!")
-            case "DRAW":
+            case Ending.DRAW:
                 print("Player and Computer tied!")
 
         print(TicTacToe.LINE)
