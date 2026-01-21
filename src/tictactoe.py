@@ -114,7 +114,6 @@ class TicTacToe():
             case Difficulty.IMPOSSIBLE:
                 return self.get_advanced_computer_pos()
 
-    # Checks if Player input is valid & if the position is empty
     def get_valid_human_pos(self) -> int:
         while True:
             try:
@@ -130,7 +129,6 @@ class TicTacToe():
             except ValueError:
                 print(INVALID_INPUT)
 
-    # Check if a Position is empty for placing validation
     def check_pos_empty(self, pos: int) -> bool:
         if not self.board[pos] == "-": return False
         return True
@@ -158,7 +156,6 @@ class TicTacToe():
     def start(self) -> None:
         TicTacToe.print_menu()
 
-        # Let human choose his symbol
         while True:
             symbol = TicTacToe.get_input_player_symbol()
             if symbol in self.players.values():
@@ -187,7 +184,6 @@ class TicTacToe():
     
         self.play()
 
-    # Game Loop
     def play(self) -> None:
         while True:
             
