@@ -4,11 +4,15 @@ class TicTacToe():
 
     PLAYER: str = "player"
     COMPUTER: str = "computer"
+    EASY: int = 1
+    MIDDLE: int = 2
+    IMPOSSIBLE: int = 3
     LINE: str = "\n" + "-" * 30
     INVALID_INPUT: str = "\nInvalid Input. Please try again."
     WIN_COMBINATIONS: list[list[int]] = [[0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows 
                                          [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
                                          [0, 4, 8], [2, 4, 6]] # Diagonals
+    DIFFICULTIES: tuple = (EASY, MIDDLE, IMPOSSIBLE)
 
     def __init__(self) -> None:
         self.board: list[str] =  ["-", "-", "-",
@@ -16,6 +20,7 @@ class TicTacToe():
                                   "-", "-", "-"]
         self.players: dict[str, str] = {TicTacToe.PLAYER: "X", TicTacToe.COMPUTER: "O"}
         self.player_turn: bool = True
+        self.difficulty: int = TicTacToe.EASY
 
     # =================== MINIMAX AI ===================    
     @staticmethod
@@ -95,12 +100,21 @@ class TicTacToe():
         while True:
             pos: int = random.randint(0, 8)
             if self.check_pos_empty(pos): return pos
+    
+    def get_difficulty_computer(self, difficulty: int) -> int:
+        match difficulty:
+            case TicTacToe.EASY:
+                return self.get_easy_computer_pos()
+            case TicTacToe.MIDDLE:
+                return self.get_middle_computer_pos()
+            case TicTacToe.IMPOSSIBLE:
+                return self.get_advanced_computer_pos()
 
     # Checks if Player input is valid & if the position is empty
     def get_valid_human_pos(self) -> int:
         while True:
             try:
-                human_pos: int = int(self.get_input_human_pos())
+                human_pos: int = int(TicTacToe.get_input_human_pos())
                 if human_pos > 0 and human_pos < 10:
                     human_pos -= 1
                     if self.check_pos_empty(human_pos):
@@ -138,11 +152,11 @@ class TicTacToe():
         return None
 
     def start(self) -> None:
-        self.print_menu()
+        TicTacToe.print_menu()
 
         # Let human choose his symbol
         while True:
-            symbol = self.get_input_player_symbol()
+            symbol = TicTacToe.get_input_player_symbol()
             if symbol in self.players.values():
                 if symbol == "X":
                     self.players[TicTacToe.PLAYER] = "X"
@@ -155,6 +169,17 @@ class TicTacToe():
                 break
             else:
                 print(TicTacToe.INVALID_INPUT)
+
+        while True:
+            try:
+                difficulty: int = int(TicTacToe.get_input_player_difficulty())
+                if difficulty in TicTacToe.DIFFICULTIES:
+                    self.difficulty = difficulty
+                    break
+                else:
+                    print(TicTacToe.INVALID_INPUT)
+            except ValueError:
+                print(TicTacToe.INVALID_INPUT)
     
         self.play()
 
@@ -164,22 +189,22 @@ class TicTacToe():
             
             # Print board
             if self.player_turn: print(TicTacToe.LINE) 
-            if self.player_turn: print(self.get_board(self.board))
+            if self.player_turn: print(TicTacToe.get_board(self.board))
 
             # Get board position
-            placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_advanced_computer_pos()
+            placed_pos: int = self.get_valid_human_pos() if self.player_turn else self.get_difficulty_computer(self.difficulty)
 
             # Set board position
             symbol = self.players[TicTacToe.PLAYER if self.player_turn else TicTacToe.COMPUTER]
             self.board[placed_pos] = symbol
 
             # Check if there is a winner
-            if self.check_win(self.board): break
+            if TicTacToe.check_win(self.board): break
 
             # Change turn (boolean flip)
             self.player_turn = not self.player_turn
 
-        winner = self.check_win(self.board)
+        winner = TicTacToe.check_win(self.board)
         self.print_end_game_menu(winner)
 
     # =================== UI ===================
@@ -192,7 +217,17 @@ class TicTacToe():
     def get_input_player_symbol() -> str:
         human_symbol: str = input("Choose your Symbol (X/O): ").upper().strip()
         return human_symbol
-        
+
+    @staticmethod
+    def get_input_player_difficulty() -> str:
+        print("\nCHOOSE YOUR DIFFICULTY:")
+        print("1. Easy")
+        print("2. Middle")
+        print("3. Impossible")
+
+        difficulty: str = input("\nChoice (1 - 3): ").lower().strip()
+        return difficulty
+    
     @staticmethod
     def get_board(board) -> str:
         updated_board: str = ""
@@ -210,7 +245,7 @@ class TicTacToe():
     def print_end_game_menu(self, winner) -> None:
         print(TicTacToe.LINE)
         print("\n GAME OVER")
-        print(self.get_board(self.board))
+        print(TicTacToe.get_board(self.board))
 
         match winner:
             case "X":
